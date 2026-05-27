@@ -1,19 +1,9 @@
 import type { FuelType, Station } from '@/types';
 import { haversineKm, estimateTravelMin } from '@/lib/geo';
+import { uzbekistanStationsExtra } from './uzbekistanStationsExtra';
+import type { StationSeed } from './stationSeedHelper';
 
-export interface StationSeed {
-  id: string;
-  name: string;
-  brand: string;
-  address: string;
-  region: string;
-  city: string;
-  latitude: number;
-  longitude: number;
-  prices: Record<FuelType, number>;
-  ratingAvg?: number;
-  is24Hours?: boolean;
-}
+export type { StationSeed } from './stationSeedHelper';
 
 /** O'zbekiston bo'ylab AZS — barcha viloyatlar */
 export const uzbekistanStationSeeds: StationSeed[] = [
@@ -79,7 +69,33 @@ export const uzbekistanStationSeeds: StationSeed[] = [
   // Toshkent qo'shimcha
   { id: 'uz-tash-6', name: 'EcoFuel Olmazor', brand: 'EcoFuel', city: 'Toshkent', region: 'Toshkent', address: 'Olmazor tumani', latitude: 41.3012, longitude: 69.1987, prices: { AI_92: 10400, AI_95: 11100, DIESEL: 9700, GAS: 4150 } },
   { id: 'uz-tash-7', name: 'Turon Oil Yakkasaroy', brand: 'Turon', city: 'Toshkent', region: 'Toshkent', address: 'Yakkasaroy ko\'chasi 45', latitude: 41.2923, longitude: 69.2678, prices: { AI_92: 10520, AI_95: 11220, DIESEL: 9820, GAS: 4180 } },
+  { id: 'uz-tash-8', name: 'Petrol Park Mirzo Ulug\'bek', brand: 'UzPetrol', city: 'Toshkent', region: 'Toshkent', address: 'Mirzo Ulug\'bek tumani', latitude: 41.3389, longitude: 69.3345, prices: { AI_92: 10490, AI_95: 11190, DIESEL: 9790, GAS: 4120 } },
+  // Qashqadaryo qo'shimcha
+  { id: 'uz-qash-4', name: 'Kitob Oil', brand: 'Lukoil', city: 'Kitob', region: 'Qashqadaryo', address: 'Markaz ko\'chasi', latitude: 39.1167, longitude: 66.8833, prices: { AI_92: 10445, AI_95: 11145, DIESEL: 9745, GAS: 4105 } },
+  { id: 'uz-qash-5', name: 'Muborak Fuel', brand: 'Neftchi', city: 'Muborak', region: 'Qashqadaryo', address: 'G\'uzor yo\'li', latitude: 39.0889, longitude: 65.1528, prices: { AI_92: 10438, AI_95: 11138, DIESEL: 9738, GAS: 4098 } },
+  // Surxondaryo qo'shimcha
+  { id: 'uz-sur-3', name: 'Sherobod Oil', brand: 'GazOil', city: 'Sherobod', region: 'Surxondaryo', address: 'Termiz yo\'li', latitude: 37.6683, longitude: 67.7917, prices: { AI_92: 10465, AI_95: 11165, DIESEL: 9765, GAS: 4115 } },
+  // Xorazm qo'shimcha
+  { id: 'uz-xor-3', name: 'Shovot Fuel', brand: 'Petroline', city: 'Shovot', region: 'Xorazm', address: 'Urganch yo\'li', latitude: 41.6556, longitude: 60.2917, prices: { AI_92: 10485, AI_95: 11185, DIESEL: 9785, GAS: 4135 } },
+  // Sirdaryo qo'shimcha
+  { id: 'uz-sir-3', name: 'Sirdaryo Oil', brand: 'Lukoil', city: 'Sirdaryo', region: 'Sirdaryo', address: 'Navoiy ko\'chasi', latitude: 40.8436, longitude: 68.6617, prices: { AI_92: 10405, AI_95: 11105, DIESEL: 9705, GAS: 4065 } },
+  // Samarqand qo'shimcha
+  { id: 'uz-sam-5', name: 'Jomboy Neft', brand: 'GazOil', city: 'Jomboy', region: 'Samarqand', address: 'Samarqand yo\'li', latitude: 39.6989, longitude: 67.0936, prices: { AI_92: 10425, AI_95: 11125, DIESEL: 9725, GAS: 4085 } },
+  // Buxoro qo'shimcha
+  { id: 'uz-bux-4', name: 'Vobkent Oil', brand: 'Turon', city: 'Vobkent', region: 'Buxoro', address: 'Buxoro yo\'li', latitude: 39.9917, longitude: 64.5153, prices: { AI_92: 10495, AI_95: 11195, DIESEL: 9795, GAS: 4135 } },
+  // Qoraqalpog'iston qo'shimcha
+  { id: 'uz-qor-4', name: 'Beruniy Fuel', brand: 'Shell', city: 'Beruniy', region: 'Qoraqalpog\'iston', address: 'Markaz ko\'chasi', latitude: 41.6917, longitude: 60.7528, prices: { AI_92: 10540, AI_95: 11240, DIESEL: 9840, GAS: 4170 } },
+  // Toshkent viloyati qo'shimcha
+  { id: 'uz-tov-5', name: 'Yangiyo\'l Oil', brand: 'UzPetrol', city: 'Yangiyo\'l', region: 'Toshkent viloyati', address: 'Toshkent yo\'li', latitude: 41.1122, longitude: 69.0472, prices: { AI_92: 10415, AI_95: 11115, DIESEL: 9715, GAS: 4075 } },
+  ...uzbekistanStationsExtra,
 ];
+
+function stableFromId(id: string, min: number, max: number): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+  const t = (Math.abs(h) % 1000) / 1000;
+  return min + t * (max - min);
+}
 
 export function seedToStation(
   seed: StationSeed,
@@ -97,17 +113,17 @@ export function seedToStation(
     latitude: seed.latitude,
     longitude: seed.longitude,
     status: 'OPEN',
-    ratingAvg: seed.ratingAvg ?? 4.2 + Math.random() * 0.6,
-    ratingCount: Math.floor(Math.random() * 80) + 5,
-    is24Hours: seed.is24Hours ?? Math.random() > 0.4,
+    ratingAvg: seed.ratingAvg ?? Math.round((4.2 + stableFromId(seed.id, 0, 0.6)) * 10) / 10,
+    ratingCount: Math.floor(stableFromId(seed.id, 5, 85)),
+    is24Hours: seed.is24Hours ?? stableFromId(seed.id, 0, 1) > 0.35,
     distanceKm,
     travelTimeMin: estimateTravelMin(distanceKm),
-    fuelPrices: (['AI_92', 'AI_95', 'DIESEL', 'GAS'] as FuelType[]).map((ft, i) => ({
+    fuelPrices: (['AI_92', 'AI_95', 'DIESEL', 'GAS'] as FuelType[]).map((ft) => ({
       id: `${seed.id}-${ft}`,
       fuelType: ft,
       pricePerLiter: seed.prices[ft],
       currency: 'UZS',
-      isAvailable: true,
+      isAvailable: seed.prices[ft] > 0,
     })),
   };
 }

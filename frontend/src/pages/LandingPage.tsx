@@ -32,7 +32,7 @@ export function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-white/10 dark:bg-black/60">
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
           <Link to="/" className="flex items-center gap-2 font-bold">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500">
               <Fuel className="h-5 w-5 text-black" />
             </span>
             {import.meta.env.VITE_APP_NAME || 'FuelGo'}
@@ -52,9 +52,8 @@ export function LandingPage() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-slate-200 dark:border-white/10">
-        <div className="absolute inset-0 bg-hero-gradient opacity-60 dark:opacity-80" />
-        <div className="relative mx-auto max-w-7xl px-6 py-24 lg:py-32">
+      <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <div className="mx-auto max-w-7xl px-6 py-24 lg:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-sm text-amber-700 dark:text-amber-400">
               <Zap className="h-4 w-4" />
@@ -62,7 +61,7 @@ export function LandingPage() {
             </div>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
               Arzonroq yoqilg&apos;i toping.
-              <span className="block bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
+              <span className="block text-amber-600 dark:text-amber-400">
                 Aqlliroq haydang.
               </span>
             </h1>

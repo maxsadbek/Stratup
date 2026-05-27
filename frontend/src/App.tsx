@@ -9,6 +9,8 @@ import { FavoritesPage } from '@/pages/FavoritesPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { DashboardInsightsPage } from '@/pages/DashboardInsightsPage';
 import { DashboardDeliveryPage } from '@/pages/DashboardDeliveryPage';
+import { DashboardFavoritesPage } from '@/pages/DashboardFavoritesPage';
+import { DashboardSettingsPage } from '@/pages/DashboardSettingsPage';
 import { useAuthStore } from '@/store/authStore';
 import { useThemeStore } from '@/store/themeStore';
 
@@ -60,6 +62,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardDeliveryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/favorites"
+            element={
+              <ProtectedRoute>
+                <DashboardFavoritesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/settings"
+            element={
+              <ProtectedRoute>
+                <DashboardSettingsPage />
               </ProtectedRoute>
             }
           />
