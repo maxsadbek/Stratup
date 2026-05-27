@@ -1,10 +1,4 @@
-export type FuelType =
-  | "AI_92"
-  | "AI_95"
-  | "DIESEL"
-  | "GAS"
-  | "PROPANE"
-  | "METHANE";
+export type FuelType = 'AI_92' | 'AI_95' | 'DIESEL' | 'GAS';
 
 export interface FuelPrice {
   id: string;
@@ -31,7 +25,7 @@ export interface Station {
 }
 
 export interface CheapestResult {
-  station: Omit<Station, "fuelPrices">;
+  station: Omit<Station, 'fuelPrices'>;
   price: { fuelType: FuelType; pricePerLiter: number; currency: string };
   distanceKm: number;
   travelTimeMin: number;
@@ -69,10 +63,8 @@ export interface User {
 }
 
 export const FUEL_LABELS: Record<FuelType, string> = {
-  AI_92: "AI-92",
-  AI_95: "AI-95",
-  DIESEL: "Diesel",
-  GAS: "Suyuq gaz",
-  PROPANE: "Propan",
-  METHANE: "Metan",
+  AI_92: 'AI-92',
+  AI_95: 'AI-95',
+  DIESEL: 'Diesel',
+  GAS: 'Gas',
 };

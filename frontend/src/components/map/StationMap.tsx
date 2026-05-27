@@ -1,15 +1,14 @@
-import { UZ_BOUNDS } from "@/lib/geo";
-import type { Station } from "@/types";
-import { FUEL_LABELS } from "@/types";
-import L from "leaflet";
-import { useEffect } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import type { Station } from '@/types';
+import { UZ_BOUNDS } from '@/lib/geo';
+import { FUEL_LABELS } from '@/types';
 
 const stationIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
@@ -28,15 +27,7 @@ function FitUzbekistanBounds() {
   return null;
 }
 
-function MapRecenter({
-  lat,
-  lng,
-  zoom,
-}: {
-  lat: number;
-  lng: number;
-  zoom?: number;
-}) {
+function MapRecenter({ lat, lng, zoom }: { lat: number; lng: number; zoom?: number }) {
   const map = useMap();
   useEffect(() => {
     if (zoom) map.setView([lat, lng], zoom);
@@ -51,18 +42,20 @@ interface StationMapProps {
   height?: string;
   fitCountry?: boolean;
   followUser?: boolean;
+  selectedFuel?: string;
 }
 
 export function StationMap({
   stations,
   userLocation,
-  height = "480px",
+  height = '480px',
   fitCountry = true,
   followUser = false,
+  selectedFuel = 'AI_95',
 }: StationMapProps) {
   const tileUrl =
     import.meta.env.VITE_MAP_TILE_URL ||
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
   return (
     <div
@@ -78,21 +71,15 @@ export function StationMap({
         <TileLayer url={tileUrl} attribution="© OpenStreetMap" />
         {fitCountry && !followUser && <FitUzbekistanBounds />}
         {followUser && (
-          <MapRecenter
-            lat={userLocation.lat}
-            lng={userLocation.lng}
-            zoom={12}
-          />
+          <MapRecenter lat={userLocation.lat} lng={userLocation.lng} zoom={12} />
         )}
 
-        <Marker
-          position={[userLocation.lat, userLocation.lng]}
-          icon={stationIcon}
-        >
+        <Marker position={[userLocation.lat, userLocation.lng]}>
           <Popup>Sizning joylashuvingiz</Popup>
         </Marker>
 
         {stations.map((s) => {
+          const price = s.fuelPrices?.find((p) => p.fuelType === selectedFuel);
           return (
             <Marker
               key={s.id}
@@ -100,24 +87,18 @@ export function StationMap({
               icon={stationIcon}
             >
               <Popup>
-                <div className="min-w-[200px] text-sm">
+                <div className="min-w-[160px] text-sm">
                   <p className="font-semibold">{s.name}</p>
                   <p className="text-slate-600">{s.brand}</p>
                   <p className="text-xs text-slate-500">{s.address}</p>
-                  <div className="mt-2 space-y-1">
-                    {s.fuelPrices?.map((fp) => (
-                      <p key={fp.id} className="text-xs">
-                        <span className="font-medium text-slate-700">
-                          {FUEL_LABELS[fp.fuelType]}:
-                        </span>{" "}
-                        {fp.pricePerLiter.toLocaleString()} UZS/L
-                      </p>
-                    ))}
-                  </div>
-                  {s.distanceKm != null && (
-                    <p className="mt-2 text-xs text-slate-500">
-                      {s.distanceKm} km
+                  {price && (
+                    <p className="mt-1 font-bold text-amber-700">
+                      {FUEL_LABELS[selectedFuel as keyof typeof FUEL_LABELS]}:{' '}
+                      {price.pricePerLiter.toLocaleString()} UZS/L
                     </p>
+                  )}
+                  {s.distanceKm != null && (
+                    <p className="text-xs text-slate-500">{s.distanceKm} km</p>
                   )}
                 </div>
               </Popup>

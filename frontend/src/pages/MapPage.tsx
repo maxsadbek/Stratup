@@ -1,12 +1,12 @@
-import { FuelTypeSelector } from "@/components/FuelTypeSelector";
-import { StationMap } from "@/components/map/StationMap";
-import { StationCard } from "@/components/StationCard";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { Button } from "@/components/ui/Button";
-import { uzbekistanRegions } from "@/data/uzbekistanStations";
-import { useMapStore } from "@/store/mapStore";
-import { Navigation, RefreshCw } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect } from 'react';
+import { Navigation, RefreshCw } from 'lucide-react';
+import { StationMap } from '@/components/map/StationMap';
+import { FuelTypeSelector } from '@/components/FuelTypeSelector';
+import { StationCard } from '@/components/StationCard';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { useMapStore } from '@/store/mapStore';
+import { uzbekistanRegions } from '@/data/uzbekistanStations';
+import { Button } from '@/components/ui/Button';
 
 export function MapPage() {
   const {
@@ -53,7 +53,7 @@ export function MapPage() {
                   await detectLocation();
                   await fetchNearby();
                 } catch {
-                  alert("Joylashuv ruxsati berilmadi");
+                  alert('Joylashuv ruxsati berilmadi');
                 }
               }}
             >
@@ -61,9 +61,7 @@ export function MapPage() {
               Mening joyim
             </Button>
             <Button size="sm" onClick={fetchNearby} disabled={isLoading}>
-              <RefreshCw
-                className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-              />
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               Yangilash
             </Button>
           </div>
@@ -90,8 +88,9 @@ export function MapPage() {
               stations={stations}
               userLocation={userLocation}
               height="520px"
-              fitCountry={selectedRegion === "Barchasi"}
-              followUser={selectedRegion !== "Barchasi"}
+              fitCountry={selectedRegion === 'Barchasi'}
+              followUser={selectedRegion !== 'Barchasi'}
+              selectedFuel={selectedFuel}
             />
           </div>
           <div className="space-y-3">
@@ -105,10 +104,9 @@ export function MapPage() {
                 price={
                   s.fuelPrices?.find((p) => p.fuelType === selectedFuel)
                     ? {
-                        pricePerLiter: s.fuelPrices!.find(
-                          (p) => p.fuelType === selectedFuel,
-                        )!.pricePerLiter,
-                        currency: "UZS",
+                        pricePerLiter: s.fuelPrices!.find((p) => p.fuelType === selectedFuel)!
+                          .pricePerLiter,
+                        currency: 'UZS',
                         fuelType: selectedFuel,
                       }
                     : undefined
